@@ -30,11 +30,16 @@ NLOSeH=[];
 NLOSeS=[];
 NLOSeHS=[];
 FS=[];
+
+%Fixed pre-calculation of P1(dBP) for use in P2
+d3D = sqrt (dBP^2 + (hBS-hUT)^2);
+P1_dBP=20*log10(40*pi*d3D*fGHz/3)+C1*log10(d3D)-C2+C3*d3D;
+
 for d=drange
     FS(indx)= 20*log10(d) + 20*log10(fGHz)+32.45;
     P1(indx)=20*log10(40*pi*d*fGHz/3)+C1*log10(d)-C2+C3*d;
     
-    P2(indx)=P1(indx)+40*log10(d/dBP);
+    P2(indx)=P1_dBP+40*log10(d/dBP);
     
     P3(indx)=C4+C5+C6*(log10(d)-3)+C7;
     
