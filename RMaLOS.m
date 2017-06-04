@@ -103,6 +103,8 @@ semilogx(drange ,LOS)  % d Normalized to 1km
 hold all
 grid on
 semilogx(drange ,NLOS)  % d Normalized to 1km
+semilogx(drange ,NLOSeH)  % d Normalized to 1km
+legend('LOS','NLOS','NLOSeH')
 h=line(bpline(:,1),bpline(:,2));
 set(h,'Color',[1,0,0])
 set(h,'LineStyle','-.');
