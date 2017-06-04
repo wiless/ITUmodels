@@ -35,15 +35,17 @@ FS=[];
 d3D = sqrt (dBP^2 + (hBS-hUT)^2);
 P1_dBP=20*log10(40*pi*d3D*fGHz/3)+C1*log10(d3D)-C2+C3*d3D;
 
-for d=drange
-    FS(indx)= 20*log10(d) + 20*log10(fGHz)+32.45;
-    P1(indx)=20*log10(40*pi*d*fGHz/3)+C1*log10(d)-C2+C3*d;
+for d2D=drange
+    d3D = sqrt (d2D^2 + (hBS-hUT)^2);
+
+    FS(indx)= 20*log10(d3D) + 20*log10(fGHz)+32.45;
+    P1(indx)=20*log10(40*pi*d3D*fGHz/3)+C1*log10(d)-C2+C3*d3D;
     
-    P2(indx)=P1_dBP+40*log10(d/dBP);
+    P2(indx)=P1_dBP+40*log10(d3D/dBP);
     
-    P3(indx)=C4+C5+C6*(log10(d)-3)+C7;
+    P3(indx)=C4+C5+C6*(log10(d3D)-3)+C7;
     
-    if d<dBP
+    if d2D<dBP
         LOS(indx)=P1(indx);
     else
         LOS(indx)=P2(indx);
@@ -52,7 +54,7 @@ for d=drange
     NLOS(indx)=max(LOS(indx),P3(indx));
     NLOSeH(indx)=max(LOS(indx),P3(indx)-12);
  NLOSeS(indx)=max(LOS(indx),P3(indx))-12;
-   if d<dBP
+   if d2D<dBP
        NLOSeHS(indx)=NLOS(indx);
    else
        NLOSeHS(indx)=NLOSeS(indx);
