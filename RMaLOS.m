@@ -1,8 +1,24 @@
 clear all
    
 drange=1:10:22000;
-fGHz=0.700;
+fGHz=0.850;
  
+% Evaluate the Probability of P_NLOS
+% ⎧ 1 ,d2D ≤10m PLOS=⎪⎨ ⎛d2D−10⎞
+% ⎪exp⎜− 1000 ⎟ ,10m<d2D
+% 
+
+indx=1;
+for d2D=drange
+    if d2D<10
+PNLos(indx)=1;
+    else
+        PNLos(indx)=exp(-(d2D-10)/1000);
+    end
+ indx=indx+1;
+end
+
+
  
 %%% Constants
 rmaH=5; % Avg Building heights
@@ -60,7 +76,7 @@ for d2D=drange
     
     NLOS(indx)=max(LOS(indx),P3(indx));
     NLOSeH(indx)=max(LOS(indx),P3(indx)-12);
-    NLOSeS(indx)=max(LOS(indx),P3(indx))-12;
+    NLOSeS(indx)=max(LOS(indx)+6,P3(indx)-12);
    if d2D<dBP
        NLOSeHS(indx)=NLOS(indx);
    else
@@ -81,13 +97,13 @@ semilogx(drange ,P3,'LineStyle','--','LineWidth',2)  % d Normalized to 1km
 semilogx(drange ,LOS,  'LineWidth',1)  % d Normalized to 1km
 semilogx(drange ,NLOS, 'LineWidth',2)  % d Normalized to 1km
 semilogx(drange ,NLOSeH,'LineWidth',2)  % d Normalized to 1km
-% semilogx(drange ,NLOSeS,'LineWidth',2)  % d Normalized to 1km
+semilogx(drange ,NLOSeS,'LineWidth',2)  % d Normalized to 1km
 % semilogx(drange ,NLOSeHS,'LineWidth',2)  % d Normalized to 1km
 semilogx(drange ,FS,'k','LineWidth',2);
 grid on;
 
 
-legend('P1','P2','P3','LOS','NLOS','NLOSeH' ,  'FSpace');
+legend('P1','P2','P3','LOS','NLOS','NLOSeH' ,'NLOSeS' , 'FSpace');
 h=line(bpline(:,1),bpline(:,2));
 set(h,'Color',[1,0,0])
 set(h,'LineStyle','-.');
@@ -104,7 +120,9 @@ hold all
 grid on
 semilogx(drange ,NLOS)  % d Normalized to 1km
 semilogx(drange ,NLOSeH)  % d Normalized to 1km
-legend('LOS','NLOS','NLOSeH')
+semilogx(drange ,NLOSeS)  % d Normalized to 1km
+
+legend('LOS','NLOS','NLOSeH','NLOSeS')
 h=line(bpline(:,1),bpline(:,2));
 set(h,'Color',[1,0,0])
 set(h,'LineStyle','-.');
