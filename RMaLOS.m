@@ -1,24 +1,8 @@
 clear all
-   
+close all
+
 drange=1:10:22000;
 fGHz=0.850;
- 
-% Evaluate the Probability of P_NLOS
-% ⎧ 1 ,d2D ≤10m PLOS=⎪⎨ ⎛d2D−10⎞
-% ⎪exp⎜− 1000 ⎟ ,10m<d2D
-% 
-
-indx=1;
-for d2D=drange
-    if d2D<10
-PNLos(indx)=1;
-    else
-        PNLos(indx)=exp(-(d2D-10)/1000);
-    end
- indx=indx+1;
-end
-
-
  
 %%% Constants
 rmaH=5; % Avg Building heights
@@ -48,23 +32,12 @@ NLOSeH=[];
 NLOSeS=[];
 NLOSeHS=[];
 FS=[];
-
-%Fixed pre-calculation of P1(dBP) for use in P2
- 
-P1_dBP=20*log10(40*pi*dBP*fGHz/3)+C1*log10(dBP)-C2+C3*dBP;
-lineval=[];
- 
-for d2D=drange
-    d3D = sqrt (d2D^2 + (hBS-hUT)^2);
-    lineval(indx,1:3)= [d3D d2D d3D-d2D];
-      d3D=d2D;
-
-    FS(indx)= 20*log10(d3D) + 20*log10(fGHz)+32.45;
-    P1(indx)=20*log10(40*pi*d3D*fGHz/3)+C1*log10(d3D)-C2+C3*d3D;
-     
-  
+P1BP=20*log10(40*pi*dBP*fGHz/3)+C1*log10(dBP)-C2+C3*dBP;
+for d=drange
+    FS(indx)= 20*log10(d) + 20*log10(fGHz)+32.45;
+    P1(indx)=20*log10(40*pi*d*fGHz/3)+C1*log10(d)-C2+C3*d;
     
-    P2(indx)=P1_dBP+40*log10(d3D/dBP);
+    P2(indx)=P1BP+40*log10(d/dBP);
     
     P3(indx)=C4+C5+C6*(log10(d3D)-3)+C7;
     
@@ -88,6 +61,8 @@ end
 bpline=[dBP,-100;dBP,200];
 
 figure;
+olddrange=drange;
+% drange=log10(drange/1000);
 
 semilogx(drange ,P1,'LineStyle','--','LineWidth',2)  % d Normalized to 1km
 hold all
@@ -115,17 +90,13 @@ xlabel('Distance log10(d)(m)')
 figure;
 
 bpline=[dBP,-100;dBP,200];
-semilogx(drange ,LOS)  % d Normalized to 1km
+semilogx(drange/1000 ,LOS)  % d Normalized to 1km
 hold all
 grid on
-semilogx(drange ,NLOS)  % d Normalized to 1km
-semilogx(drange ,NLOSeH)  % d Normalized to 1km
-semilogx(drange ,NLOSeS)  % d Normalized to 1km
-
-legend('LOS','NLOS','NLOSeH','NLOSeS')
-h=line(bpline(:,1),bpline(:,2));
-set(h,'Color',[1,0,0])
-set(h,'LineStyle','-.');
+semilogx(drange/1000 ,NLOS)  % d Normalized to 1km
+% h=line(bpline(:,1),bpline(:,2));
+% set(h,'Color',[1,0,0])
+% set(h,'LineStyle','-.');
 ylabel('PL [dB]')
 xlabel('Distance log10(d)(m)')
 
