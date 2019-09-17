@@ -52,8 +52,6 @@ for d=drange
  NLOSeS(indx)=max(LOS(indx),P3(indx))-12;
    if d<dBP
        NLOSeHS(indx)=NLOS(indx);
-   else
-       NLOSeHS(indx)=NLOSeS(indx);
     end
  
     indx=indx+1;
@@ -72,13 +70,11 @@ semilogx(drange ,P3,'LineStyle','--','LineWidth',2)  % d Normalized to 1km
 semilogx(drange ,LOS,'s','LineWidth',1)  % d Normalized to 1km
 semilogx(drange ,NLOS,'x','LineWidth',2)  % d Normalized to 1km
 semilogx(drange ,NLOSeH,'LineWidth',2)  % d Normalized to 1km
-semilogx(drange ,NLOSeS,'LineWidth',2)  % d Normalized to 1km
-semilogx(drange ,NLOSeHS,'LineWidth',2)  % d Normalized to 1km
 semilogx(drange ,FS,'k','LineWidth',2);
 grid on;
 
 
-legend('P1','P2','P3','LOS','NLOS','NLOSeH','NLOSeS','NLOSeHS','FSpace');
+legend('P1','P2','P3','LOS','NLOS','NLOSeH','FSpace');
 h=line(bpline(:,1),bpline(:,2));
 set(h,'Color',[1,0,0])
 set(h,'LineStyle','-.');
@@ -88,16 +84,25 @@ xlabel('Distance log10(d)(m)')
 
 
 figure;
-
+dlosMax=10000;
+dnlosMax=5000;
+dnloslmlcMax=21000;
 bpline=[dBP,-100;dBP,200];
-semilogx(drange/1000 ,LOS)  % d Normalized to 1km
+drangelos=drange(drange<=10000);
+K=length(drangelos);
+semilogx(drangelos ,LOS(1:K))  % d Normalized to 1km
+text(dlosMax,max(LOS(1,K)),'10000m')
 hold all
+drangenlos=drange(drange<=5000);
+K=length(drangenlos);
+text(dnlosMax,max(NLOS(1,K)),'5000m')
+semilogx(drangenlos ,NLOS(1:K))  % d Normalized to 1km
+
+text(dnloslmlcMax,max(NLOSeH),'21000m')
+semilogx(drange ,NLOSeH)  % d Normalized to 1km
 grid on
-semilogx(drange/1000 ,NLOS)  % d Normalized to 1km
-% h=line(bpline(:,1),bpline(:,2));
-% set(h,'Color',[1,0,0])
-% set(h,'LineStyle','-.');
+
 ylabel('PL [dB]')
 xlabel('Distance log10(d)(m)')
-
-
+legend ('LOS','NLOS','NLOS-LMLC','Location','best');
+title('RMa Pathloss vs Distance for LOS,NLOS and NLOS-LMLCeq')
