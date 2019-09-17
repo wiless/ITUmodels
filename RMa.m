@@ -47,7 +47,8 @@ for d=drange
         LOS(indx)=P2(indx);
     end
     
-    NLOS(indx)=max(LOS(indx),P3(indx));
+    % NLOS(indx)=max(LOS(indx),P3(indx));  % As per Channel Model B
+    NLOS(indx)=P3(indx);  % As per Channel Model A
     NLOSeH(indx)=max(LOS(indx),P3(indx)-12);
  NLOSeS(indx)=max(LOS(indx),P3(indx))-12;
    if d<dBP
