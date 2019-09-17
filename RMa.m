@@ -79,7 +79,8 @@ h=line(bpline(:,1),bpline(:,2));
 set(h,'Color',[1,0,0])
 set(h,'LineStyle','-.');
 ylabel('PL [dB]')
-xlabel('Distance log10(d)(m)')
+title('For detailed debug purpose...')
+xlabel('Distance log10(d)(km)')
 
 
 
