@@ -90,19 +90,34 @@ dnloslmlcMax=21000;
 bpline=[dBP,-100;dBP,200];
 drangelos=drange(drange<=10000);
 K=length(drangelos);
-semilogx(drangelos ,LOS(1:K))  % d Normalized to 1km
-text(dlosMax,max(LOS(1,K)),'10000m')
+
+
+%%% PLOT LOS
+h=semilogx(drange ,LOS,'--')  % d Normalized to 1km
+c=get(h,'Color');
+
 hold all
+h=semilogx(drangelos ,LOS(1:K),'-')  % d Normalized to 1km
+set(h,'Color',c)
+set(h,'LineWidth',2)
+
+text(dlosMax,max(LOS(1,K)),'10000m')
+
+%%% PLOT NLOS
 drangenlos=drange(drange<=5000);
 K=length(drangenlos);
 text(dnlosMax,max(NLOS(1,K)),'5000m')
-semilogx(drangenlos ,NLOS(1:K))  % d Normalized to 1km
+h=semilogx(drange,NLOS,'--')  % d Normalized to 1km
+c=get(h,'Color');
+h=semilogx(drangenlos ,NLOS(1:K))  % d Normalized to 1km
+set(h,'Color',c);
+set(h,'LineWidth',2)
 
 text(dnloslmlcMax,max(NLOSeH),'21000m')
-semilogx(drange ,NLOSeH)  % d Normalized to 1km
+h=semilogx(drange ,NLOSeH)  % d Normalized to 1km
+set(h,'LineWidth',2)
 grid on
-
 ylabel('PL [dB]')
 xlabel('Distance log10(d)(m)')
-legend ('LOS','NLOS','NLOS-LMLC','Location','best');
+legend ('LOS-ext', 'LOS','NLOS-ext','NLOS','NLOS-LMLC','Location','best');
 title('RMa Pathloss vs Distance for LOS,NLOS and NLOS-LMLCeq')
